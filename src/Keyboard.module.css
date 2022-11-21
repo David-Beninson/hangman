@@ -1,4 +1,4 @@
-.btn{
+.btn {
     width: 100%;
     border: 3px solid black;
     background: none;
@@ -10,14 +10,244 @@
     cursor: pointer;
     color: black;
 }
-.btn.active{
+
+.btn.active {
     background-color: hsl(200, 100%, 50%);
     color: white;
 }
-.btn.inactive{
+
+.btn.inactive {
     opacity: .3;
 }
+
 .btn:hover:not(:disabled),
-.btn:focus:not(:disabled){
+.btn:focus:not(:disabled) {
     background-color: hsl(200, 100%, 75%);
+}
+
+.word {
+    font-size: 6rem;
+    font-weight: bold;
+}
+
+.letter {
+    border-bottom: .1em solid black
+}
+
+.head {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border: 10px solid black;
+    position: absolute;
+    top: 50px;
+    right: -30px
+}
+
+.body {
+    width: 10px;
+    height: 100px;
+    background-color: black;
+    position: absolute;
+    top: 120px;
+    right: 0
+}
+
+.rarm {
+    width: 100px;
+    height: 10px;
+    background-color: black;
+    position: absolute;
+    top: 150px;
+    right: -100px;
+    rotate: -30deg;
+    transform-origin: left bottom;
+}
+
+.larm {
+    width: 100px;
+    height: 10px;
+    background-color: black;
+    position: absolute;
+    top: 150px;
+    right: 10px;
+    rotate: 30deg;
+    transform-origin: right bottom;
+}
+
+.rleg {
+    width: 100px;
+    height: 10px;
+    background-color: black;
+    position: absolute;
+    top: 210px;
+    right: -90px;
+    rotate: 60deg;
+    transform-origin: left bottom;
+}
+
+.lleg {
+    width: 100px;
+    height: 10px;
+    background-color: black;
+    position: absolute;
+    top: 210px;
+    right: 0;
+    rotate: -60deg;
+    transform-origin: right bottom;
+}
+
+.btm {
+    height: 10px;
+    width: 250px;
+    background: black
+}
+
+.stc {
+    height: 400px;
+    width: 10px;
+    background: black;
+    margin-left: 120px
+}
+
+.tp {
+    height: 10px;
+    width: 200px;
+    background: black;
+    margin-left: 120px
+}
+
+.str {
+    height: 50px;
+    width: 10px;
+    background: black;
+    margin-left: 120px;
+    position: absolute;
+    top: 0;
+    right: 0
+}
+
+@media(max-width: 750px) {
+    .word {
+        font-weight: normal;
+        font-size: 2rem;
+    }
+
+    .btn {
+        margin-left: 1rem;
+        width: 50%;
+        border: 1.5px solid black;
+        background: none;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        cursor: auto;
+        color: black;
+    }
+
+    .btn.active {
+        background-color: hsl(200, 100%, 50%);
+        color: white;
+    }
+
+    .btn.inactive {
+        opacity: .3;
+    }
+
+    .btn:focus:not(:disabled) {
+        background-color: hsl(200, 100%, 75%);
+    }
+
+    .btm {
+        height: 5px;
+        width: 125px;
+        background: black
+    }
+
+    .stc {
+        height: 200px;
+        width: 5px;
+        background: black;
+        margin-left: 60px
+    }
+
+    .tp {
+        height: 5px;
+        width: 100px;
+        background: black;
+        margin-left: 60px
+    }
+
+    .str {
+        height: 25px;
+        width: 5px;
+        background: black;
+        margin-left: 60px;
+        position: absolute;
+        top: 0;
+        right: 0
+    }
+
+    .head {
+        width: 25px;
+        height: 25px;
+        border-radius: 100%;
+        border: 5px solid black;
+        position: absolute;
+        top: 25px;
+        right: -15px
+    }
+
+
+.body {
+    width: 5px;
+    height: 50px;
+    background-color: black;
+    position: absolute;
+    top: 60px;
+    right: 0
+}
+
+.rarm {
+    width: 50px;
+    height: 5px;
+    background-color: black;
+    position: absolute;
+    top: 75px;
+    right: -50px;
+    rotate: -15deg;
+    transform-origin: left bottom;
+}
+
+.larm {
+    width: 50px;
+    height: 5px;
+    background-color: black;
+    position: absolute;
+    top: 75px;
+    right: 5px;
+    rotate: 15deg;
+    transform-origin: right bottom;
+}
+
+.rleg {
+    width: 50px;
+    height: 5px;
+    background-color: black;
+    position: absolute;
+    top: 105px;
+    right: -45px;
+    rotate: 30deg;
+    transform-origin: left bottom;
+}
+
+.lleg {
+    width: 50px;
+    height: 5px;
+    background-color: black;
+    position: absolute;
+    top: 105px;
+    right: 0;
+    rotate: -30deg;
+    transform-origin: right bottom;
+}
 }

@@ -24,7 +24,7 @@ function App() {
   }, [guessedLetters, isWinner, isLoser])
 
   useEffect(() => {
-    const handler = (e, KeyboardEvent) => {
+    const handler = (e,KeyboardEvent ) => {
       const key = e.key
 
       if (!key.match(/^[a-z]$/)) return
@@ -32,10 +32,10 @@ function App() {
       e.preventDefault()
       addGuessedLetter(key)
     }
-    document.addEventListener("keypress", handler)
+    document.addEventListener("touchend", handler)
 
     return () => {
-      document.removeEventListener("keypress", handler)
+      document.removeEventListener("touchend", handler)
     }
   }, [guessedLetters])
 
@@ -50,10 +50,10 @@ function App() {
       setGuessedLetters([])
       setWordToGuess(getWord())
     }
-    document.addEventListener("keypress", handler)
+    document.addEventListener("touchend", handler)
 
     return () => {
-      document.removeEventListener("keypress", handler)
+      document.removeEventListener("touchend", handler)
     }
   },[])
 
