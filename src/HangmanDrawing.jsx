@@ -4,20 +4,6 @@ import { motion } from 'framer-motion'
 const GALLOWS_COLOR = "var(--text-muted)"
 const DRAW_COLOR = "var(--accent-secondary)"
 
-const Line = ({ variants, custom }) => (
-  <motion.div
-    variants={variants}
-    custom={custom}
-    initial="hidden"
-    animate="visible"
-    style={{
-      position: 'absolute',
-      backgroundColor: DRAW_COLOR,
-      boxShadow: '0 0 10px var(--accent-secondary)',
-      borderRadius: '10px'
-    }}
-  />
-)
 
 export default function HangmanDrawing({ numberOfGuesses, maxGuesses }) {
   // SVG approach is cleaner for drawing effects

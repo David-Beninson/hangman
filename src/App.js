@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useRef } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Play, RotateCcw, Home, Trophy, Globe, ChevronRight, Lightbulb, Volume2, VolumeX } from "lucide-react"
 import confetti from 'canvas-confetti'
@@ -41,16 +41,16 @@ function getRandomWord(category, lang) {
 export default function App() {
   // Game States
   const [gameState, setGameState] = useState(GAME_STATES.HOME)
-  const [language, setLanguage] = useState('he') // Default to Hebrew per user preference
+  const [language, setLanguage] = useState('he')
   const [category, setCategory] = useState('Animals')
   const [difficulty, setDifficulty] = useState(DIFFICULTIES.MEDIUM)
-  
+
   // Gameplay States
   const [wordToGuess, setWordToGuess] = useState("")
   const [guessedLetters, setGuessedLetters] = useState([])
   const [hintsUsed, setHintsUsed] = useState(0)
   const [isAnimatingError, setIsAnimatingError] = useState(false)
-  
+
   // Persistence States
   const [streak, setStreak] = useState(() => Number(localStorage.getItem('hangman-streak')) || 0)
   const [bestStreak, setBestStreak] = useState(() => Number(localStorage.getItem('hangman-best')) || 0)
@@ -63,12 +63,12 @@ export default function App() {
     // Check standard and final mapping
     const isDirectMatch = wordToGuess.includes(letter)
     if (isDirectMatch) return false
-    
+
     // Check if letter is a standard version of a final letter in the word
-    const hasFinalEquivalent = Object.entries(HEBREW_FINAL_MAP).some(([final, std]) => 
+    const hasFinalEquivalent = Object.entries(HEBREW_FINAL_MAP).some(([final, std]) =>
       std === letter && wordToGuess.includes(final)
     )
-    
+
     return !hasFinalEquivalent
   })
 
@@ -76,16 +76,16 @@ export default function App() {
   const isWinner = wordToGuess.length > 0 && wordToGuess.split('').every(letter => {
     if (letter === ' ' || letter === '-') return true
     if (guessedLetters.includes(letter)) return true
-    
+
     // Support final letter unification in win condition
     const stdLetter = HEBREW_FINAL_MAP[letter]
     if (stdLetter && guessedLetters.includes(stdLetter)) return true
-    
+
     return false
   })
 
   // Sound Effects (Using placeholders for real assets)
-  const playSound = (type) => {
+  const playSound = useCallback((type) => {
     if (isMuted) return
     const sounds = {
       click: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',
@@ -95,8 +95,8 @@ export default function App() {
     }
     const audio = new Audio(sounds[type])
     audio.volume = 0.5
-    audio.play().catch(() => {}) // Ignore autoplay blocks
-  }
+    audio.play().catch(() => { }) // Ignore autoplay blocks
+  }, [isMuted])
 
   // Handle Win/Loss
   useEffect(() => {
@@ -122,7 +122,7 @@ export default function App() {
       setGameState(GAME_STATES.RESULT)
       playSound('lose')
     }
-  }, [isWinner, isLoser, gameState])
+  }, [isWinner, isLoser, gameState, bestStreak, playSound, streak])
 
   const startGame = () => {
     const word = getRandomWord(category, language)
@@ -135,13 +135,13 @@ export default function App() {
 
   const addGuessedLetter = useCallback((letter) => {
     if (guessedLetters.includes(letter) || isLoser || isWinner || gameState !== GAME_STATES.PLAYING) return
-    
+
     setGuessedLetters(currentLetters => [...currentLetters, letter])
-    
+
     // Trigger shake on error
-    const isCorrect = wordToGuess.includes(letter) || 
-                     Object.entries(HEBREW_FINAL_MAP).some(([final, std]) => std === letter && wordToGuess.includes(final))
-    
+    const isCorrect = wordToGuess.includes(letter) ||
+      Object.entries(HEBREW_FINAL_MAP).some(([final, std]) => std === letter && wordToGuess.includes(final))
+
     if (!isCorrect) {
       setIsAnimatingError(true)
       playSound('error')
@@ -149,17 +149,17 @@ export default function App() {
     } else {
       playSound('click')
     }
-  }, [guessedLetters, isWinner, isLoser, gameState, wordToGuess])
+  }, [guessedLetters, isWinner, isLoser, gameState, wordToGuess, playSound])
 
   const useHint = () => {
     if (hintsUsed >= difficulty.hints || gameState !== GAME_STATES.PLAYING) return
-    
+
     // Find missing letters
-    const missingLetters = wordToGuess.split('').filter(l => 
-      l !== ' ' && l !== '-' && !guessedLetters.includes(l) && 
+    const missingLetters = wordToGuess.split('').filter(l =>
+      l !== ' ' && l !== '-' && !guessedLetters.includes(l) &&
       !(HEBREW_FINAL_MAP[l] && guessedLetters.includes(HEBREW_FINAL_MAP[l]))
     )
-    
+
     if (missingLetters.length > 0) {
       const randomLetter = missingLetters[Math.floor(Math.random() * missingLetters.length)]
       // If it's a final letter, suggest the standard one
@@ -175,16 +175,16 @@ export default function App() {
     const handler = (e) => {
       if (gameState !== GAME_STATES.PLAYING) return
       const key = e.key.toLowerCase()
-      
+
       // Standardize Hebrew input if it's a final letter
-      const stdKey = Object.values(HEBREW_FINAL_MAP).includes(key) ? key : 
-                     (HEBREW_FINAL_MAP[key] || key)
+      const stdKey = Object.values(HEBREW_FINAL_MAP).includes(key) ? key :
+        (HEBREW_FINAL_MAP[key] || key)
 
       const isEnglish = /^[a-z]$/.test(stdKey)
       const isHebrew = /^[\u0590-\u05FF]$/.test(stdKey)
-      
+
       if (!isEnglish && !isHebrew) return
-      
+
       e.preventDefault()
       addGuessedLetter(stdKey)
     }
@@ -207,17 +207,17 @@ export default function App() {
   return (
     <div className="App" dir={isRTL ? "rtl" : "ltr"}>
       {/* Header / Stats */}
-      <div style={{ 
-        width: '100%', 
-        maxWidth: '800px', 
-        display: 'flex', 
-        justifyContent: 'space-between', 
+      <div style={{
+        width: '100%',
+        maxWidth: '800px',
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: '1rem',
         zIndex: 10
       }}>
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          <button 
+          <button
             onClick={() => {
               const nextLang = language === 'en' ? 'he' : 'en'
               setLanguage(nextLang)
@@ -229,7 +229,7 @@ export default function App() {
             <Globe size={16} />
             {language.toUpperCase()}
           </button>
-          <button 
+          <button
             onClick={toggleMute}
             className="glass-panel"
             style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', cursor: 'pointer', border: 'none', color: isMuted ? 'var(--text-muted)' : 'var(--accent-primary)' }}
@@ -300,12 +300,12 @@ export default function App() {
               </div>
               <HangmanDrawing numberOfGuesses={incorrectLetters.length} maxGuesses={difficulty.lives} />
             </div>
-            
+
             <HangmanWord guessedLetters={guessedLetters} wordToGuess={wordToGuess} language={language} HebrewMap={HEBREW_FINAL_MAP} />
 
             <div className="keyboard-wrapper">
-              <Keyboard 
-                disabled={false} 
+              <Keyboard
+                disabled={false}
                 activeLetters={guessedLetters.filter(letter => wordToGuess.includes(letter) || Object.entries(HEBREW_FINAL_MAP).some(([f, s]) => s === letter && wordToGuess.includes(f)))}
                 inactiveLetters={incorrectLetters}
                 addGuessedLetter={addGuessedLetter}
@@ -317,10 +317,10 @@ export default function App() {
               <button onClick={() => { setGameState(GAME_STATES.HOME); playSound('click'); }} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <Home size={18} /> {t.mainMenu}
               </button>
-              
+
               {difficulty.hints > 0 && (
-                <button 
-                  onClick={useHint} 
+                <button
+                  onClick={useHint}
                   disabled={hintsUsed >= difficulty.hints}
                   style={{ background: 'var(--panel-bg)', borderRadius: '12px', border: '1px solid var(--glass-border)', color: hintsUsed >= difficulty.hints ? 'var(--text-muted)' : 'var(--accent-primary)', padding: '0.8rem 1.2rem', cursor: hintsUsed >= difficulty.hints ? 'default' : 'pointer', display: 'flex', alignItems: 'center', gap: '0.6rem', opacity: hintsUsed >= difficulty.hints ? 0.5 : 1 }}
                 >
